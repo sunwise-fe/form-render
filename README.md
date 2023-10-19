@@ -37,7 +37,7 @@ pnpm i @sunwise/el-form-renderer-vue3
 ```
 
 ```ts
-import elFormRenderer from "el-form-renderer-vue3";
+import elFormRenderer from "@/sunwise/el-form-renderer-vue3";
 app.use(elFormRenderer);
 ```
 
