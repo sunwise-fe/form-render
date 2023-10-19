@@ -1,0 +1,183 @@
+<template>
+  <el-form-renderer
+    label-width="100px"
+    :content="content"
+    v-model:FormData="FormData"
+    ref="form"
+  >
+    <template #id:region>
+      <div>requestRemoteCount: {{ requestRemoteCount }}</div>
+    </template>
+    <el-form-item>
+      <el-button @click="resetForm">resetForm</el-button>
+      <el-button @click="disableName"
+        >{{ content[0].disabled ? "启" : "禁" }}用第一项</el-button
+      >
+      <el-button @click="setOptions">更新 region 的 options</el-button>
+      <el-button @click="addFormItem">随机插入表单项</el-button>
+      <el-button @click="removeFormItem">随机移除表单项</el-button>
+    </el-form-item>
+    <pre>{{ FormData }}</pre>
+  </el-form-renderer>
+</template>
+
+<script setup>
+import { reactive, ref } from "vue";
+import elFormRenderer from "../components/femessage/el-form-renderer.vue";
+let requestRemoteCount = ref(0);
+const form = ref();
+let id = ref(0);
+let FormData = reactive({
+  name: "1111",
+  region: [],
+  type: [],
+  startDate: "2019-01-01",
+  endDate: "2019-01-02",
+});
+const content = reactive([
+  {
+    type: "input",
+    id: "name",
+    label: "name",
+    attrs: { "data-name": "form1" },
+    el: {
+      size: "default",
+      placeholder: "test placeholder",
+    },
+    rules: [
+      { required: true, message: "miss name", trigger: "blur" },
+      { min: 3, max: 5, message: "length between 3 to 5", trigger: "blur" },
+    ],
+  },
+  {
+    type: "select",
+    id: "region",
+    label: "region",
+    remote: {
+      // url: 'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-form-renderer?q=remote',
+      request: () => {
+        const data = [
+          {
+            label: "shanghai",
+            value: "shanghai",
+          },
+          {
+            label: "beijing",
+            value: "beijing",
+          },
+          {
+            label: "guangzhou",
+            value: "guangzhou",
+          },
+        ];
+        requestRemoteCount.value++;
+        return new Promise((r) => setTimeout(() => r(data), 2000));
+      },
+    },
+    el: { filterable: true, multiple: true, multipleLimit: 2 },
+    rules: [{ required: true, message: "miss area", trigger: "change" }],
+  },
+  {
+    type: "date-picker",
+    id: "date",
+    label: "date",
+    el: {
+      type: "daterange",
+      valueFormat: "yyyy-MM-dd",
+    },
+    rules: [{ required: true, message: "miss date", trigger: "change" }],
+    inputFormat: (row) => {
+      if (row.startDate && row.endDate) {
+        return [row.startDate, row.endDate];
+      }
+    },
+    outputFormat: (val) => {
+      if (!val) {
+        return { startDate: "", endDate: "" };
+      }
+      return {
+        startDate: val[0],
+        endDate: val[1],
+      };
+    },
+  },
+  {
+    type: "switch",
+    id: "delivery",
+    label: "delivery",
+  },
+  {
+    type: "checkbox-group",
+    id: "type",
+    label: "type",
+    default: [],
+    options: [
+      {
+        label: "typeA",
+      },
+      {
+        label: "typeB",
+      },
+      {
+        label: "typeC",
+      },
+    ],
+    rules: [
+      {
+        type: "array",
+        required: true,
+        message: "miss type",
+        trigger: "change",
+      },
+    ],
+  },
+  {
+    type: "radio-group",
+    id: "resource",
+    label: "resource",
+    options: [
+      {
+        label: "resourceA",
+      },
+      {
+        label: "resourceB",
+      },
+    ],
+    rules: [{ required: true, message: "miss resource", trigger: "change" }],
+  },
+  {
+    type: "input",
+    id: "desc",
+    label: "desc",
+    el: {
+      type: "textarea",
+    },
+    rules: [{ required: true, message: "miss desc", trigger: "blur" }],
+  },
+]);
+const resetForm = () => {
+  form.value.methods.resetFields();
+};
+const disableName = () => {
+  content[0].disabled = !content[0].disabled;
+};
+const setOptions = () => {
+  const region = content.find((item) => item.id === "region");
+  if (!region) return;
+  region.options = [{ label: "广州", value: "广州" }];
+};
+const addFormItem = () => {
+  const i = Math.floor(Math.random() * (content.length + 1));
+  id.value++;
+  content.splice(i, 0, {
+    id: `name${id.value}`,
+    label: `表单项${id.value}`,
+    type: "input",
+  });
+};
+const removeFormItem = () => {
+  if (content.length <= 1) return;
+  const i = Math.floor(Math.random() * content.length);
+  content.splice(i, 1);
+};
+</script>

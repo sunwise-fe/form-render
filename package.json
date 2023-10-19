@@ -1,0 +1,42 @@
+{
+  "name": "el-form-renderer-vue3",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/el-form-renderer-vue3.umd.js",
+  "module": "./dist/el-form-renderer-vue3.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/el-form-renderer-vue3.es.js",
+      "require": "./dist/el-form-renderer-vue3.umd.js"
+    }
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
+    "axios": "^1.5.1",
+    "element-plus": "^2.3.14",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.frompairs": "^4.0.1",
+    "lodash.get": "^4.4.2",
+    "lodash.has": "^4.5.2",
+    "lodash.includes": "^4.3.0",
+    "lodash.isequal": "^4.5.0",
+    "lodash.isplainobject": "^4.0.6",
+    "lodash.kebabcase": "^4.1.1",
+    "lodash.set": "^4.3.2",
+    "lodash.topairs": "^4.3.0",
+    "vue": "^3.3.4",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "vite": "^4.4.5"
+  }
+}
