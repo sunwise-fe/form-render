@@ -1,10 +1,27 @@
 {
-  "name": "el-form-renderer-vue3",
-  "version": "1.0.0",
+  "name": "@sunwise/el-form-renderer-vue3",
+  "version": "1.0.1",
   "type": "module",
+  "author": "zuopf769",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sunwise-fe/form-render.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "vue3",
+    "lowcode",
+    "element-plus",
+    "form",
+    "form-render"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cd dist && rm vite.svg",
     "preview": "vite preview"
   },
   "files": [

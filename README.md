@@ -33,7 +33,7 @@ form-renderer 基于元素 element-plus，但不限于元素 element-plus 组件
 ## Quick Start
 
 ```ts
-pnpm i el-form-renderer-vue3
+pnpm i @sunwise/el-form-renderer-vue3
 ```
 
 ```ts
@@ -185,6 +185,8 @@ const setValue = () => {
 </script>
 
 ```
+
+[更多 Demo](https://github.com/sunwise-fe/form-render/tree/main/demo)
 
 ## Props
 
