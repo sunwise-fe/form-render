@@ -2,6 +2,8 @@
   <nav class="box">
     <router-link to="/">base</router-link> |
 
+    <router-link to="/inline">inline</router-link> |
+
     <router-link to="/checkboxGroup">checkbox-group</router-link> |
 
     <router-link to="/content">content</router-link> |

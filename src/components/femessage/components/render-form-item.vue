@@ -1,104 +1,100 @@
 <template>
-  <div>
-    <!-- 绑定显示，校验匹配规则字段，label，rules校验规则，attrs（原生属性）， -->
-    <el-form-item
-      v-if="_show"
-      :prop="prop"
-      :label="typeof data.label === 'string' ? data.label : ''"
-      :rules="!readonly && Array.isArray(data.rules) ? data.rules : undefined"
-      v-bind="data.attrs"
-      class="render-form-item"
-    >
-      <!-- label插槽 -->
-      <template #label>
-        <v-node v-if="typeof data.label !== 'string'" :content="data.label" />
-      </template>
-      <!-- 处理之只读input select -->
-      <template v-if="readonly && hasReadonlyContent">
-        <el-input
-          v-if="data.type === 'input'"
-          v-bind="componentProps"
-          :modelValue="itemValue"
-          readonly
-          v-on="listeners"
-        />
+  <!-- 绑定显示，校验匹配规则字段，label，rules校验规则，attrs（原生属性）， -->
+  <el-form-item
+    v-if="_show"
+    :prop="prop"
+    :label="typeof data.label === 'string' ? data.label : ''"
+    :rules="!readonly && Array.isArray(data.rules) ? data.rules : undefined"
+    v-bind="data.attrs"
+    class="render-form-item"
+  >
+    <!-- label插槽 -->
+    <template #label>
+      <v-node v-if="typeof data.label !== 'string'" :content="data.label" />
+    </template>
+    <!-- 处理之只读input select -->
+    <template v-if="readonly && hasReadonlyContent">
+      <el-input
+        v-if="data.type === 'input'"
+        v-bind="componentProps"
+        :modelValue="itemValue"
+        readonly
+        v-on="listeners"
+      />
 
-        <div v-else-if="data.type === 'select'">
-          {{ multipleValue }}
-        </div>
+      <div v-else-if="data.type === 'select'">
+        {{ multipleValue }}
+      </div>
+    </template>
+    <!-- 处理 date-picker,cascader,动态渲染不显示文字 bug-->
+    <component
+      v-else-if="data.type === 'date-picker' || data.type === 'cascader'"
+      ref="customComponent"
+      v-bind:is="data.component || `el-${data.type || 'input'}`"
+      v-bind="componentProps"
+      :modelValue="itemValue"
+      :disabled="disabled || componentProps.disabled || readonly"
+      v-on="listeners"
+      :loading="loading"
+      :remote-method="
+        data.remoteMethod || componentProps.remoteMethod || remoteMethod
+      "
+    >
+    </component>
+    <!-- 绑定 模板引用 动态组件 props value值 是否禁用 事件 lodding 远端搜索方法 -->
+    <component
+      v-else
+      ref="customComponent"
+      v-bind:is="data.component || `el-${data.type || 'input'}`"
+      v-bind="componentProps"
+      :modelValue="itemValue"
+      :disabled="disabled || componentProps.disabled || readonly"
+      v-on="listeners"
+      :loading="loading"
+      :remote-method="
+        data.remoteMethod || componentProps.remoteMethod || remoteMethod
+      "
+    >
+      <!-- 插槽处理  选项-->
+      <template v-for="(opt, index) in options">
+        <el-option
+          v-if="data.type === 'select'"
+          :key="optionKey(opt) || index"
+          v-bind="opt"
+        />
+        <el-checkbox-button
+          v-if="data.type === 'checkbox-group' && data.style === 'button'"
+          :key="opt.value"
+          v-bind="opt"
+          :label="'value' in opt ? opt.value : opt.label"
+        >
+          {{ opt.label }}
+        </el-checkbox-button>
+        <el-checkbox
+          v-else-if="data.type === 'checkbox-group' && data.style !== 'button'"
+          :key="opt.value"
+          v-bind="opt"
+          :label="'value' in opt ? opt.value : opt.label"
+        >
+          {{ opt.label }}
+        </el-checkbox>
+        <el-radio-button
+          v-else-if="data.type === 'radio-group' && data.style === 'button'"
+          :key="opt.label"
+          v-bind="opt"
+          :label="'value' in opt ? opt.value : opt.label"
+          >{{ opt.label }}</el-radio-button
+        >
+        <el-radio
+          v-else-if="data.type === 'radio-group' && data.style !== 'button'"
+          :key="opt.label"
+          v-bind="opt"
+          :label="'value' in opt ? opt.value : opt.label"
+          >{{ opt.label }}</el-radio
+        >
       </template>
-      <!-- 处理 date-picker,cascader,动态渲染不显示文字 bug-->
-      <component
-        v-else-if="data.type === 'date-picker' || data.type === 'cascader'"
-        ref="customComponent"
-        v-bind:is="data.component || `el-${data.type || 'input'}`"
-        v-bind="componentProps"
-        :modelValue="itemValue"
-        :disabled="disabled || componentProps.disabled || readonly"
-        v-on="listeners"
-        :loading="loading"
-        :remote-method="
-          data.remoteMethod || componentProps.remoteMethod || remoteMethod
-        "
-      >
-      </component>
-      <!-- 绑定 模板引用 动态组件 props value值 是否禁用 事件 lodding 远端搜索方法 -->
-      <component
-        v-else
-        ref="customComponent"
-        v-bind:is="data.component || `el-${data.type || 'input'}`"
-        v-bind="componentProps"
-        :modelValue="itemValue"
-        :disabled="disabled || componentProps.disabled || readonly"
-        v-on="listeners"
-        :loading="loading"
-        :remote-method="
-          data.remoteMethod || componentProps.remoteMethod || remoteMethod
-        "
-      >
-        <!-- 插槽处理  选项-->
-        <template v-for="(opt, index) in options">
-          <el-option
-            v-if="data.type === 'select'"
-            :key="optionKey(opt) || index"
-            v-bind="opt"
-          />
-          <el-checkbox-button
-            v-if="data.type === 'checkbox-group' && data.style === 'button'"
-            :key="opt.value"
-            v-bind="opt"
-            :label="'value' in opt ? opt.value : opt.label"
-          >
-            {{ opt.label }}
-          </el-checkbox-button>
-          <el-checkbox
-            v-else-if="
-              data.type === 'checkbox-group' && data.style !== 'button'
-            "
-            :key="opt.value"
-            v-bind="opt"
-            :label="'value' in opt ? opt.value : opt.label"
-          >
-            {{ opt.label }}
-          </el-checkbox>
-          <el-radio-button
-            v-else-if="data.type === 'radio-group' && data.style === 'button'"
-            :key="opt.label"
-            v-bind="opt"
-            :label="'value' in opt ? opt.value : opt.label"
-            >{{ opt.label }}</el-radio-button
-          >
-          <el-radio
-            v-else-if="data.type === 'radio-group' && data.style !== 'button'"
-            :key="opt.label"
-            v-bind="opt"
-            :label="'value' in opt ? opt.value : opt.label"
-            >{{ opt.label }}</el-radio
-          >
-        </template>
-      </component>
-    </el-form-item>
-  </div>
+    </component>
+  </el-form-item>
 </template>
 
 <script setup>
