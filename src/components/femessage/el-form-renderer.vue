@@ -37,6 +37,9 @@
 </template>
 
 <script setup>
+// passive 是用于控制浏览器是否可以在滚动时取消事件的默认行为。当 passive 设置为 true 时，表示事件处理函数不会调用 preventDefault() 来阻止默认的滚动行为。
+//在一些滚动事件处理中，如果事件处理函数中调用了 preventDefault()，浏览器会等待该函数执行完毕后再进行滚动，这可能导致滚动的延迟。通过将 passive 设置为 true，可以告诉浏览器事件处理函数不会调用 preventDefault()，从而使滚动更加流畅。
+import "./util/ployfill";
 import RenderFormGroup from "./components/render-form-group.vue";
 import RenderFormItem from "./components/render-form-item.vue";
 import {

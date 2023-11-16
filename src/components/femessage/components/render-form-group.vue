@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-for="(item, index) in data.items">
+    <template v-for="(item, index) in data.items" :key="index">
       <slot :name="`id:${item.id}`" />
       <slot :name="`$id:${item.id}`" />
 

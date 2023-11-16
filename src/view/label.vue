@@ -9,10 +9,17 @@ const content = reactive([
   {
     type: "input",
     id: "name",
-    label: h("span", {}, "输入"),
     el: {
       size: "small",
     },
+    label: h("div", null, [
+      h("span", null, "编辑"),
+      h(
+        resolveComponent("el-icon"),
+        { class: "el-icon--right", size: 20 },
+        () => [h(resolveComponent("Edit"))]
+      ),
+    ]),
   },
 ]);
 </script>

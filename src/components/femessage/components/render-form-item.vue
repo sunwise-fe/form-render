@@ -11,11 +11,7 @@
     >
       <!-- label插槽 -->
       <template #label>
-        <v-node
-          v-if="typeof data.label !== 'string'"
-          slot="label"
-          :content="data.label"
-        />
+        <v-node v-if="typeof data.label !== 'string'" :content="data.label" />
       </template>
       <!-- 处理之只读input select -->
       <template v-if="readonly && hasReadonlyContent">
